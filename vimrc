@@ -21,9 +21,9 @@ set showmatch " highlight matching parenthesis
 " }}}
 
 " Searching {{{
+set ignorecase
 set incsearch
 set hlsearch
-set ignorecase
 set smartcase
 " turn off search highlight
 nnoremap <leader><space> :nohlsearch<CR>
@@ -69,22 +69,9 @@ Plugin 'micha/vim-colors-solarized'
 
 Plugin 'kien/ctrlp.vim'
 
-" The following are examples of different formats supported.
-" Keep Plugin commands between vundle#begin/end.
-" plugin on GitHub repo
 Plugin 'tpope/vim-fugitive'
-" plugin from http://vim-scripts.org/vim/scripts.html
-" Plugin 'L9'
-" Git plugin not hosted on GitHub
-Plugin 'git://git.wincent.com/command-t.git'
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-" Install L9 and avoid a Naming conflict if you've already installed a
-" different version somewhere else.
-" Plugin 'ascenator/L9', {'name': 'newL9'}
 
-Plugin 'Valloric/YouCompleteMe'
+"Plugin 'Valloric/YouCompleteMe'
 
 Plugin 'scrooloose/nerdtree'
 " Show git status
@@ -108,10 +95,17 @@ Plugin 'mhinz/vim-startify'
 
 Plugin 'ryanoasis/vim-devicons'
 
+Plugin 'fatih/vim-go', {'do': ':GoUpdateBinaries'}
+
+Plugin 'w0rp/ale'
+
+Plugin 'mdempsky/gocode', {'rtp': 'vim/'}
+
+Plugin 'mileszs/ack.vim'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
-
 " }}}
 
 " CtrlP {{{
@@ -137,7 +131,7 @@ endif
 " }}}
 
 " Powerline settings {{{
-set rtp+=/usr/local/lib/python2.7/site-packages/powerline/bindings/bash/powerline.sh
+set rtp+=/usr/local/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh
 
 set t_Co=256
 
@@ -159,6 +153,7 @@ nmap ,g :NERDTreeToggle<cr>
 
 " Tagbar quickstart {{{
 nmap <Leader>t :TagbarToggle<CR>
+" gd to go to def, C-o to go back
 let g:tagbar_type_go = {
     \ 'ctagstype' : 'go',
     \ 'kinds'     : [
@@ -236,5 +231,59 @@ set guifont=DroidSansMono_Nerd_Font:h11
 " required if using https://github.com/bling/vim-airline
 let g:airline_powerline_fonts=1
 " }}}
+
+" vim-go settings {{{
+au FileType go set noexpandtab
+au FileType go set shiftwidth=4
+au FileType go set softtabstop=4
+au FileType go set tabstop=4
+
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_types = 1
+
+" highlites other use of the variable
+let g:go_auto_sameids = 1
+
+" auto import
+let g:go_fmt_command = "goimports"
+
+" linting code
+" Error and warning signs.
+let g:ale_sign_error = '⤫'
+let g:ale_sign_warning = '⚠'
+" Enable integration with airline.
+let g:airline#extensions#ale#enabled = 1
+
+" switch to tests
+au Filetype go nmap <leader>ga <Plug>(go-alternate-edit)
+au Filetype go nmap <leader>gah <Plug>(go-alternate-split)
+au Filetype go nmap <leader>gav <Plug>(go-alternate-vertical)
+
+au FileType go nmap <leader>gd :GoDeclsDir<cr>
+
+au FileType go nmap <F8> :GoTest -short<cr>
+au FileType go nmap <F9> :GoCoverageToggle -short<cr>
+
+
+" auto show what type it is
+let g:go_auto_type_info = 1
+
+" go to definition, go back press C-t
+au FileType go nmap <F12> <Plug>(go-def)
+
+" press K when over a type or function to get more details
+
+" Add json to struct. use :GoAddTags
+let g:go_addtags_transform = "snakecase"
+
+" Variable global search
+map <F4> :Ack
+" }}} 
 
 " vim:foldmethod=marker:foldlevel=0
